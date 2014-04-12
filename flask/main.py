@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, render_template, send_from_directory, request, session, redirect, url_for
 from firebase import firebase
+import sendgrid
+import APIconstants
 import hashlib
 import time
 import pyjade
@@ -51,7 +53,7 @@ def answer():
             if sectionComplete(qid.split('/')[3]):
                 print "section complete"
             else:
-                print "level complete"
+                email(user['email'])
         else:
             print 'not complete'
         #iflevel, section?
@@ -125,6 +127,17 @@ def userExists(user):
         if users[uid]['username'] == user:
             return True
     return False
+
+def email(email):
+    sg = sendgrid.SendGridClient('DaxEarl', SENDGRIDPASS)
+    message = sendgrid.Mail()
+    message.add_to(email)
+    message.set_subject('Your child has completed a section')
+    message.set_html('You have a cool loot for a child')
+    message.set_text('This is text')
+    message.set_from('toots4sloots<toots4loots@sendgrid.net>')
+    status, msg = sg.send(message)
+    print "sent "+email +" an email"
 
 if __name__ == '__main__':
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
