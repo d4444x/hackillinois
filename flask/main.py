@@ -26,6 +26,15 @@ def getAnswered():
 def payments():
     return render_template('payments.jade')
 
+@app.route('/paid/')
+def payed():
+    if not 'id' in session:
+        return redirect(url_for('index'))
+    amount = int(float(request.args['amount']))
+    user = getUserDict(session['id'])
+    firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']+amount, 'answered':user['answered'], 'times':user['times']})
+    return render_template('payment_successful.jade')
+
 def levelComplete(section, level):
     answered = getAnswered()
     levels = firebase.get('/questions/sections/' + section + '/level/' + level, None)
@@ -100,6 +109,12 @@ def questions(section, level):
         return redirect(url_for('index'))
     questions = firebase.get('/questions/sections/' + section + '/level/' + level, None)
     return jsonify({section:{level:list(questions)}})
+
+@app.route('/credit/')
+def credit():
+    if not 'id' in session:
+        return redirect(url_for('index'))
+    return jsonify({'credit':firebase.get('/users', session['id'])['credit']})
 
 def getUserDict(uid):
     return firebase.get('/users', uid)
