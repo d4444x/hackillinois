@@ -12,17 +12,36 @@ firebase = firebase.FirebaseApplication('https://rhtuts.firebaseio.com/', None)
 def index():
     return render_template('index.jade')
 
+@app.route('/answered/')
+def getAnswered():
+    return firebase.get('/users', session['id'])['answered']
+
+def levelComplete(section, level):
+    answered = getAnswered();
+    levels = firebase.get('/questions/sections/' + section + '/level/' + level, None)
+    lvlCount = len(list(levels))
+    userCount = answered.replace('/',' ').split(' ').count(level)
+    if userCount == lvlCount:
+        return True
+    return False
+
 @app.route('/answer/', methods=['GET','POST'])
 def answer():
-    qid = request.form['qid']
-    answer = request.form['answer']
+    qid = '/questions/sections/math/level/one/P2' #request.form['qid']
+    answer = 7 #request.form['answer']
     question = firebase.get(qid,None)
     if answer == question['answer']:
         user = getUserDict(session['id'])
-        if len(user['answered']) == 0:
-            firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':qid})
+        if user['answered'].find(qid) == -1:
+            if len(user['answered']) == 0:
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':qid})
+            else:
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':user['answered'] + ' ' + qid})
+        if levelComplete(qid.split('/')[3], qid.split('/')[5]):
+            print 'complete'
         else:
-            firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':user['answered'] + ', ' + qid})
+            print 'not complete'
+        #iflevel, section?
         return jsonify({'correct':'true'})
     return jsonify({'correct':'false'})
 
