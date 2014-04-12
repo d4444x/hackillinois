@@ -13,16 +13,21 @@ h1 Tuts-4-Sluts
               nbsp
               | Courses
             ul              
-              li(ng-repeat="section in sections", questionView)
-                span.glyphicon.glyphicon-minus-sign
+              li(ng-repeat="section in sections", on-finish-render-section)
+                span.glyphicon.glyphicon-plus-sign(ng-click='expandSection(section)')
                   nbsp
                   | {{section}}
                 ul
-                  li(ng-repeat="level in levels[section]")
-                    span.glyphicon.glyphicon-share
+                  li(ng-repeat="level in levels[section]", on-finish-render-level)
+                    span.glyphicon.glyphicon-plus-sign(ng-click='expandLevel(section, level)')
                       nbsp
-                      a(href="")
-                        | {{level}}
+                      | {{level}}
+                    ul
+                      li(ng-repeat="question in questions[section][level]", on-finish-render-question)
+                        span.glyphicon.glyphicon-question-sign
+                          nbsp
+                          a(href="")
+                            | {{question}}
 
 
   div.col-md-1.full-height

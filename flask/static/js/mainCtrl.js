@@ -1,11 +1,15 @@
-angular.module('tutsApp', [])
+'use strict';
+
+angular.module('tutsApp')
+  ////////////////
+  // Controller //
+  ////////////////
   .controller('MainCtrl', function ($scope, $http) {
     $scope.sections = [];
     $scope.levels = {};
     $scope.questions = {};
 
     // Getting questions functionality
-
     $scope.getQuestion = function(sectionName, level, number, callback) {
          $http.get('/ask'+"/"+sectionName+"/"+level+"/"+number).
         success(function(data, status, headers, config) {
@@ -59,6 +63,56 @@ angular.module('tutsApp', [])
     $scope.getAnsweredQuestions = function(callback) {
 
     }
+    // End Get questions functionality
+
+    $scope.expandSection = function(section) {
+      $scope.getLevels(section, function(err,res) {
+        if (err) {
+          console.log("oh no" + err);
+          return;
+        }
+        var currentSection = Object.keys(res)[0];
+        $scope.levels[Object.keys(res)[0]] = res[Object.keys(res)[0]];
+      });
+    }
+
+    $scope.expandLevel = function(section, level) {
+      $scope.getQuestions(section, level, function(err,res) {
+        if (err) {
+          console.log("oh no" + err);
+          return;
+        }
+        var currentSection = Object.keys(res)[0];
+        var currentLevel = Object.keys(res[currentSection])[0];
+
+        if (!!!$scope.questions[currentSection]) {
+          $scope.questions[currentSection] = {};
+        }
+        $scope.questions[currentSection][currentLevel] = [];
+
+        for (var i = res[currentSection][currentLevel].length - 1; i >= 0; i--) {
+          $scope.questions[currentSection][currentLevel][i] = res[currentSection][currentLevel][i].substring(1);
+        };
+      });
+    }
+
+    // TODO: Need to rewrite this
+    $scope.$on('sectionEnumerated', function(ngRepeatFinishedEvent) {
+      // console.log(ngRepeatFinishedEvent);
+      $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
+      $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').on('click', function (e) {
+        var children = $(this).parent('li.parent_li').find(' > ul > li');
+        if (children.is(':visible')) {
+          children.hide('fast');
+          $(this).addClass('glyphicon-plus-sign').removeClass('glyphicon-minus-sign');
+        }
+        else {
+          children.show('fast');
+          $(this).addClass('glyphicon-minus-sign').removeClass('glyphicon-plus-sign');
+        }
+        e.stopPropagation();
+      });
+    });
 
     // Init the sections  
     $scope.getSections(function(err,res) {
@@ -67,44 +121,52 @@ angular.module('tutsApp', [])
         return;
       }
       $scope.sections = res.sections;
-      updateLevels();
     });
-    
-    function updateLevels() {
-      for (var i = $scope.sections.length - 1; i >= 0; i--) {
-        $scope.getLevels($scope.sections[i], function(err,res) {
-          if (err) {
-            console.log("oh no" + err);
-            return;
-          }
-          var currentSection = Object.keys(res)[0];
-          $scope.levels[Object.keys(res)[0]] = res[Object.keys(res)[0]];
-        })
-      };
+
+    //
+    // Utility/Internal functions
+    //
+    function capitalizeEachWord(str) {
+      return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
   })
-  .directive('selectEvent',function() {
+  ////////////////
+  // Directives //
+  ////////////////
+  .directive('onFinishRenderSection',function($timeout) {
     return {
       restrict : 'A',
       link : function(scope, element, attr) {
         if (scope.$last === true) {
-          var addSelectionFunc = function(event, ui) {
-            scope.$apply(function(){
-              scope.addToSelected(event, ui);
-            });
-          };
-          var removeSelectionFunc = function(event, ui) {
-            scope.$apply(function() {
-              scope.removeFromSelected(event, ui);
-            })
-          };
-          angular.element('.selectable' ).selectable({
-            selected : addSelectionFunc,
-            selecting : addSelectionFunc,
-            unselected : removeSelectionFunc,
-            unselecting : removeSelectionFunc
+          $timeout(function () {
+            scope.$emit('sectionEnumerated');
           });
         }
       }
     };
+  })
+  .directive('onFinishRenderLevel',function($timeout) {
+    return {
+      restrict : 'A',
+      link : function(scope, element, attr) {
+        if (scope.$last === true) {
+          $timeout(function () {
+            scope.$emit('sectionEnumerated');
+          });
+        }
+      }
+    };
+  })
+  .directive('onFinishRenderQuestions',function($timeout) {
+    return {
+      restrict : 'A',
+      link : function(scope, element, attr) {
+        if (scope.$last === true) {
+          $timeout(function () {
+            scope.$emit('sectionEnumerated');
+          });
+        }
+      }
+    };
+  })
 
