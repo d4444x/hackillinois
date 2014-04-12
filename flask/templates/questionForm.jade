@@ -1,8 +1,9 @@
-h3 Math: Level One, Problem 1
+{% raw %}
+h3 {{currentTitle}}
   .well
       ul.list-group
         li.list-group-item(style='text-align: center;')
-          b 1+1=?
+          b(ng-bind-html='currentQuestion')
       form(action='/answer/', method='POST')
         .form-group
           label.answer Answer:
@@ -10,4 +11,4 @@ h3 Math: Level One, Problem 1
             input.form-control(type='text')
             input(name='qid', value='/questions/sections/math/level/one/P1', type='hidden')
         button.btn.btn-info(type='submit') Submit Answer
-
+{% endraw %}

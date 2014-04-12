@@ -1,10 +1,11 @@
 {% extends "template.jade" %}
 {% block content %}
-{% raw %}
+
 h1 Tuts-4-Sluts
 
 #container.col
   .col-md-4.full-hight
+    {% raw %}
     .well.well-sm
       .tree.well
         ul
@@ -24,18 +25,18 @@ h1 Tuts-4-Sluts
                       | {{level}}
                     ul
                       li(ng-repeat="question in questions[section][level]", on-finish-render-question)
-                        span.glyphicon.glyphicon-question-sign
+                        span.glyphicon.glyphicon-question-sign(ng-click='selectQuestion(section, level, question)')
                           nbsp
                           a(href="")
                             | {{question}}
 
+    {% endraw %}
+  .col-md-1.full-height
 
-  div.col-md-1.full-height
-
-  div.col-md-5.full-height
-    |stuff
-  div.col-md-2.full-height
+  .col-md-5.full-height
+    include questionForm
+  .col-md-2.full-height
     
 
-{% endraw %}
+
 {% endblock %}

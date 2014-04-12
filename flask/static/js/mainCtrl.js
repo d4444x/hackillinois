@@ -1,13 +1,10 @@
-'use strict';
-
-angular.module('tutsApp')
-  ////////////////
-  // Controller //
-  ////////////////
+ angular.module('tutsApp', ['ngSanitize'])
   .controller('MainCtrl', function ($scope, $http) {
     $scope.sections = [];
     $scope.levels = {};
     $scope.questions = {};
+    $scope.currentQuestion = '';
+    $scope.currentTitle = '';
 
     // Getting questions functionality
     $scope.getQuestion = function(sectionName, level, number, callback) {
@@ -64,6 +61,18 @@ angular.module('tutsApp')
 
     }
     // End Get questions functionality
+
+    $scope.selectQuestion = function(section, level, question) {
+      $scope.getQuestion(section, level, 'P' + question, function(err, res) {
+        if (err) {
+          console.log("oh no" + err);
+          return;
+        }
+        console.log(res.question);
+        $scope.currentQuestion = res.question;
+        $scope.currentTitle = res.title;
+      })      
+    }
 
     $scope.expandSection = function(section) {
       $scope.getLevels(section, function(err,res) {
@@ -166,6 +175,20 @@ angular.module('tutsApp')
             scope.$emit('sectionEnumerated');
           });
         }
+      }
+    };
+  })
+  .directive('problemText',function() {
+    return {
+      restrict : 'A',
+      link : function(scope, element, attr) {
+        if (!!!scope.currentQuestion.question) {
+          console.log("g");
+          return;
+        }
+        console.log('h');
+        var tag = scope.currentQuestion.question;
+        angular.element(element[0]).html('<b>Click</b>');
       }
     };
   })
