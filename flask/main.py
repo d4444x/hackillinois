@@ -156,7 +156,7 @@ def email(email, section, level):
     print "sent "+email +" an email"
 
 def mailCert(username):
-    lob.api_key = LOBAPIKEY
+    lob.api_key = APIconstants.LOBAPIKEY
     obj = [{'name' : 'Math Award', 'file' : 'www.golliver.me/suzy.pdf', 'setting_id' : '100', 'quantity' : 1}]
     from_address = {'name' : 'CEO OF MATH', 'address_line1' : '221 William T Morrissey', 'address_line2' : 'Sunset Town', 'address_city' : 'Boston', 'address_state' : 'MA', 'address_country' : 'US',           'address_zip' : '02125'}
     to_address = {'name' : 'Suzy', 'address_line1' : '220 William T Morrissey', 'address_line2' : 'Sunset Town', 'address_city' : 'Boston', 'address_state' : 'MA', 'address_country' : 'US',                    'address_zip' : '02125'}
