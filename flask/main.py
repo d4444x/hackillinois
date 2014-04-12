@@ -72,9 +72,9 @@ def answer():
         user = getUserDict(session['id'])
         if user['answered'].find(qid) == -1:
             if len(user['answered']) == 0:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-10, 'answered':qid, 'times':time.strftime("%m/%d/%Y %I:%M:%S")})
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-10, 'answered':qid, 'times':time.strftime("%m/%d/%Y %H:%M:%S")})
             else:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-2.50, 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %I:%M:%S")})
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-2.50, 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %H:%M:%S")})
         if levelComplete(qid.split('/')[3], qid.split('/')[5]):
             if sectionComplete(qid.split('/')[3]):
                 mailCert(user['username']) 
