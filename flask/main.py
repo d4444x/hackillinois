@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, send_from_directory, request, session, redirect, url_for
 from firebase import firebase
 import hashlib
+import time
 import pyjade
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ def getAnswered():
     return firebase.get('/users', session['id'])['answered']
 
 def levelComplete(section, level):
-    answered = getAnswered();
+    answered = getAnswered()
     levels = firebase.get('/questions/sections/' + section + '/level/' + level, None)
     lvlCount = len(list(levels))
     userCount = answered.replace('/',' ').split(' ').count(level)
@@ -25,20 +26,32 @@ def levelComplete(section, level):
         return True
     return False
 
+def sectionComplete(section):
+    answered = getAnswered()
+    levels = firebase.get('/questions/sections/' + section + '/level', None)
+    levels = list(levels)
+    for level in levels:
+        if not levelComplete(section, level):
+            return False
+    return True
+
 @app.route('/answer/', methods=['GET','POST'])
 def answer():
-    qid = '/questions/sections/math/level/one/P2' #request.form['qid']
-    answer = 7 #request.form['answer']
+    qid = request.form['qid']
+    answer = request.form['answer']
     question = firebase.get(qid,None)
     if answer == question['answer']:
         user = getUserDict(session['id'])
         if user['answered'].find(qid) == -1:
             if len(user['answered']) == 0:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':qid})
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':qid, 'times':time.strftime("%m/%d/%Y %I:%M:%S")})
             else:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':user['answered'] + ' ' + qid})
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %I:%M:%S")})
         if levelComplete(qid.split('/')[3], qid.split('/')[5]):
-            print 'complete'
+            if sectionComplete(qid.split('/')[3]):
+                print "section complete"
+            else:
+                print "level complete"
         else:
             print 'not complete'
         #iflevel, section?
@@ -85,7 +98,7 @@ def registerPost():
     password = hashlib.sha1(request.form['password']).hexdigest()
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
@@ -95,7 +108,7 @@ def registerGet(username, password):
     password = hashlib.sha1(password).hexdigest()
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
