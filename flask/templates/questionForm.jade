@@ -4,11 +4,11 @@ h3 {{currentTitle}}
       ul.list-group
         li.list-group-item
           b(ng-bind-html='currentQuestion')
-      form(action='/answer/', method='POST',ng-submit='submitAnswer()')
+      form(ng-submit='submitAnswer()')
         .form-group
           label.answer Answer:
           .answer(name='answer')
             input.form-control(name='answer', type='text')
             input(name='qid', value='{{currentQuestionId}}', type='hidden')
-        button.btn.btn-info(type='submit') Submit Answer
+        input.btn.btn-info(type="submit" id="submit" value="Submit Answer")
 {% endraw %}

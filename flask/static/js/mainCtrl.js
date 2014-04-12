@@ -3,8 +3,8 @@
     $scope.sections = [];
     $scope.levels = {};
     $scope.questions = {};
-    $scope.currentQuestion = '';
-    $scope.currentTitle = '';
+    $scope.currentQuestion = 'Question not selected.';
+    $scope.currentTitle = 'Select a Question';
     $scope.currentQuestionId = '';
     $scope.answeredQuestions = [];
 
@@ -70,6 +70,10 @@
     }
     // End Get questions functionality
 
+    $scope.submitAnswer = function() {
+      console.log('nop');
+    }
+
     $scope.selectQuestion = function(section, level, question) {
       $scope.getQuestion(section, level, 'P' + question, function(err, res) {
         if (err) {
@@ -111,6 +115,7 @@
         for (var i = res[currentSection][currentLevel].length - 1; i >= 0; i--) {
           $scope.questions[currentSection][currentLevel][i] = res[currentSection][currentLevel][i].substring(1);
         };
+        console.log($scope.questions[currentSection][currentLevel]);
       });
     }
 
