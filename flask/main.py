@@ -71,7 +71,7 @@ def sections():
 @app.route('/ask/<section>')
 def levels(section):
     levels = firebase.get('/questions/sections/' + section + '/level', None)
-    return jsonify({'levels':list(levels)})
+    return jsonify({section:list(levels)})
 
 @app.route('/ask/<section>/<level>')
 def questions(section, level):

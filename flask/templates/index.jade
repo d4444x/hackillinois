@@ -12,35 +12,17 @@ h1 Tuts-4-Sluts
             span.glyphicon.glyphicon-folder-open
               nbsp
               | Courses
-            ul
-              li
+            ul              
+              li(ng-repeat="section in sections", questionView)
                 span.glyphicon.glyphicon-minus-sign
                   nbsp
-                  | Meth
+                  | {{section}}
                 ul
-                  li
+                  li(ng-repeat="level in levels[section]")
                     span.glyphicon.glyphicon-share
                       nbsp
                       a(href="")
-                        |Level1
-              li
-                span.glyphicon.glyphicon-minus-sign
-                  nbsp
-                  | Programming
-                ul
-                  li
-                    span.glyphicon.glyphicon-share
-                      nbsp
-                      | Level1
-              li
-                span.glyphicon.glyphicon-minus-sign
-                  nbsp
-                  | Cooking
-                ul
-                  li
-                    span.glyphicon.glyphicon-share
-                      nbsp
-                      | Level1
+                        | {{level}}
 
 
   div.col-md-1.full-height
