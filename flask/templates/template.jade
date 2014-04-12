@@ -1,19 +1,17 @@
 !!! 5
-html(ng-app="tutsApp")
+html
   head
     title TUTS4SLUTS
     script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular.js')
     //- script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular-route.js')
-    //- script(src='https://code.jquery.com/jquery-1.10.2.min.js')
-    //- script(src='/static/js/bootstrap.min.js')
-    //- script(src='/static/js/bootswatch.js')
-    //- link(rel='stylesheet', href='/static/css/bootstrap.css')
-    script(src='/static/js/main.js')
+    script(src='https://code.jquery.com/jquery-1.10.2.min.js')
+    script(src='/static/js/bootstrap.min.js')
+    script(src='/static/js/bootswatch.js')
+    link(rel='stylesheet', href='/static/css/bootstrap.css')
+    script(src='/static/js/app.js')
     script(src='/static/js/mainCtrl.js')
 
-  body
+  body(ng-app="tutsApp")
     div.container(ng-controller="MainCtrl")
-      {% block content %}
-      {% endblock %}
-  
-         
+     {% block content %}
+     {% endblock %}
