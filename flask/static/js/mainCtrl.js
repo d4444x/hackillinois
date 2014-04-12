@@ -50,7 +50,7 @@
     }
 
     $scope.submitAnswer = function(sectionName, level, number, data, callback) {
-      $http.post('/answer'+"/"+sectionName+"/"+level+"/"+number, data).
+      $http.post('/answer'+"/"+sectionName+"/"+level+"/P"+number, data).
         success(function(data, status, headers, config) {
           callback(null, data);
         }).
@@ -71,6 +71,21 @@
     // End Get questions functionality
 
     $scope.submitAnswer = function() {
+
+      $http.post('/answer/', {'qid':$scope.currentQuestionId, 'answer':$scope.currentAnswer}).
+        success(function(data, status, headers, config) {          
+          $scope.getAnsweredQuestions(function(err, res) {
+            if (err) {
+              console.log("oh no" + err);
+              return;
+            }
+            $scope.answeredQuestions = res.split(" ");
+          });
+          
+        }).
+        error(function(data, status, headers, config) {
+          console.log('oh no' + status);
+        });
       console.log('nop');
     }
 
