@@ -147,6 +147,10 @@ def registerPost():
     session['id'] = result['name']
     return redirect(url_for('index'))
 
+@app.route('/register/')
+def register():
+    return render_template('register.jade')
+
 @app.route('/register/<username>/<password>')
 def registerGet(username, password):
     username = username
