@@ -92,13 +92,20 @@ def login():
             session['id'] = uid
     return redirect(url_for('index'))
 
+@app.route('/logout/')
+def logout():
+    session.pop('id',None)
+    return redirect(url_for('index'))
+
 @app.route('/register/', methods=['POST'])
 def registerPost():
     username = request.form['username']
     password = hashlib.sha1(request.form['password']).hexdigest()
+    email = request.form['email']
+    phone = request.form['phone']
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':'', 'times':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
@@ -108,7 +115,7 @@ def registerGet(username, password):
     password = hashlib.sha1(password).hexdigest()
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':'', 'times':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'email':'test@test.com', 'phone':'9999999999', 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
