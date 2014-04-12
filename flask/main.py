@@ -35,7 +35,7 @@ def sectionComplete(section):
             return False
     return True
 
-@app.route('/answer/', methods=['GET','POST'])
+@app.route('/answer/', methods=['POST'])
 def answer():
     qid = request.form['qid']
     answer = request.form['answer']
@@ -76,7 +76,7 @@ def levels(section):
 @app.route('/ask/<section>/<level>')
 def questions(section, level):
     questions = firebase.get('/questions/sections/' + section + '/level/' + level, None)
-    return jsonify({'questions':list(questions)})
+    return jsonify({section:{level:list(questions)}})
 
 def getUserDict(uid):
     return firebase.get('/users', uid)
