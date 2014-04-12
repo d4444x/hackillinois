@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template, send_from_directory, request, session, redirect, url_for
 from firebase import firebase
 import sendgrid
+import lob
 import APIconstants
 import hashlib
 import time
@@ -17,6 +18,8 @@ def index():
 
 @app.route('/answered/')
 def getAnswered():
+    if not 'id' in  session:
+        return redirect(url_for('index'))
     return firebase.get('/users', session['id'])['answered']
 
 def levelComplete(section, level):
@@ -42,8 +45,11 @@ def sectionComplete(section):
 
 @app.route('/answer/', methods=['POST'])
 def answer():
-    qid = request.form['qid']
-    answer = request.form['answer']
+    if not 'id' in  session:
+        return redirect(url_for('index'))
+    jres = request.get_json()
+    qid = jres['qid']
+    answer = jres['answer']
     question = firebase.get(qid,None)
     if str(question['answer']) == str(answer):
         user = getUserDict(session['id'])
@@ -54,7 +60,7 @@ def answer():
                 firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %I:%M:%S")})
         if levelComplete(qid.split('/')[3], qid.split('/')[5]):
             if sectionComplete(qid.split('/')[3]):
-                print "section complete"
+                mailCert(user['username']) 
             else:
                 email(user['email'], qid.split('/')[3], qid.split('/')[5])
         else:
@@ -65,21 +71,29 @@ def answer():
 
 @app.route('/ask/<section>/<level>/<number>')
 def ask(section, level, number):
+    if not 'id' in  session:
+        return redirect(url_for('index'))
     question = firebase.get('/questions/sections/' + section + '/level/' + level + '/' + number, None)
     return jsonify(question)
 
 @app.route('/ask/')
 def sections():
+    if not 'id' in  session:
+        return redirect(url_for('index'))
     sections = firebase.get('/questions/sections', None)
     return jsonify({'sections':list(sections)})
 
 @app.route('/ask/<section>')
 def levels(section):
+    if not 'id' in  session:
+        return redirect(url_for('index'))
     levels = firebase.get('/questions/sections/' + section + '/level', None)
     return jsonify({section:list(levels)})
 
 @app.route('/ask/<section>/<level>')
 def questions(section, level):
+    if not 'id' in  session:
+        return redirect(url_for('index'))
     questions = firebase.get('/questions/sections/' + section + '/level/' + level, None)
     return jsonify({section:{level:list(questions)}})
 
@@ -140,6 +154,14 @@ def email(email, section, level):
     message.set_from('toots4sloots<toots4loots@sendgrid.net>')
     status, msg = sg.send(message)
     print "sent "+email +" an email"
+
+def mailCert(username):
+    lob.api_key = LOBAPIKEY
+    obj = [{'name' : 'Math Award', 'file' : 'www.golliver.me/suzy.pdf', 'setting_id' : '100', 'quantity' : 1}]
+    from_address = {'name' : 'CEO OF MATH', 'address_line1' : '221 William T Morrissey', 'address_line2' : 'Sunset Town', 'address_city' : 'Boston', 'address_state' : 'MA', 'address_country' : 'US',           'address_zip' : '02125'}
+    to_address = {'name' : 'Suzy', 'address_line1' : '220 William T Morrissey', 'address_line2' : 'Sunset Town', 'address_city' : 'Boston', 'address_state' : 'MA', 'address_country' : 'US',                    'address_zip' : '02125'}
+    lobjobdict = lob.Job.create(name='Suzy Math Award', to=to_address, objects=obj, from_address=from_address, packaging_id='7').to_dict()
+    print 'Certification Sent'
 
 if __name__ == '__main__':
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
