@@ -1,0 +1,22 @@
+.panel.panel-default
+    .panel-heading
+        h3.panel-title
+          strong Register
+      .panel-body
+        form(action='/register/', method='POST', role='form')
+          .form-group
+            label(for='username') Username
+            input#username.form-control(type='text', style='border-radius: 0px;', name='username', placeholder='Username')
+          .form-group
+            label(for='password') Password
+            input#password.form-control(type='password', style='border-radius: 0px;', name='password', placeholder='Password')
+          .form-group
+            label.email Parent Email
+            .controls
+              input.form-control(name='email', type='text')
+          .form-group
+            label.phone Parent Phone #
+            .controls
+              input.form-control(name='phone', type='text')
+          button.btn.btn-sm.btn-default(type='submit') Register
+
