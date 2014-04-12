@@ -23,7 +23,10 @@ def levelComplete(section, level):
     answered = getAnswered()
     levels = firebase.get('/questions/sections/' + section + '/level/' + level, None)
     lvlCount = len(list(levels))
-    userCount = answered.replace('/',' ').split(' ').count(level)
+    userCount = 0
+    for question in levels:
+        if '/questions/sections/'+section+'/level/'+level+'/'+question in answered.split():
+            userCount+=1
     if userCount == lvlCount:
         return True
     return False
@@ -42,18 +45,18 @@ def answer():
     qid = request.form['qid']
     answer = request.form['answer']
     question = firebase.get(qid,None)
-    if answer == question['answer']:
+    if str(question['answer']) == str(answer):
         user = getUserDict(session['id'])
         if user['answered'].find(qid) == -1:
             if len(user['answered']) == 0:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':qid, 'times':time.strftime("%m/%d/%Y %I:%M:%S")})
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':qid, 'times':time.strftime("%m/%d/%Y %I:%M:%S")})
             else:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'credit':user['credit'], 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %I:%M:%S")})
+                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %I:%M:%S")})
         if levelComplete(qid.split('/')[3], qid.split('/')[5]):
             if sectionComplete(qid.split('/')[3]):
                 print "section complete"
             else:
-                email(user['email'])
+                email(user['email'], qid.split('/')[3], qid.split('/')[5])
         else:
             print 'not complete'
         #iflevel, section?
@@ -128,13 +131,12 @@ def userExists(user):
             return True
     return False
 
-def email(email):
-    sg = sendgrid.SendGridClient('DaxEarl', SENDGRIDPASS)
+def email(email, section, level):
+    sg = sendgrid.SendGridClient('DaxEarl', APIconstants.SENDGRIDPASS)
     message = sendgrid.Mail()
     message.add_to(email)
-    message.set_subject('Your child has completed a section')
-    message.set_html('You have a cool loot for a child')
-    message.set_text('This is text')
+    message.set_subject('Your child has completed a level')
+    message.set_html('Your child has completed the ' + section + ' section level ' + level + '<br>')
     message.set_from('toots4sloots<toots4loots@sendgrid.net>')
     status, msg = sg.send(message)
     print "sent "+email +" an email"
