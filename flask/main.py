@@ -30,7 +30,7 @@ def payments():
 def payed():
     if not 'id' in session:
         return redirect(url_for('index'))
-    amount = int(float(request.args['amount']))
+    amount = 1.00*float(request.args['amount'])
     user = getUserDict(session['id'])
     firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']+amount, 'answered':user['answered'], 'times':user['times']})
     return render_template('payment_successful.jade')
