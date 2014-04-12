@@ -63,3 +63,11 @@
 body{
     background: url(../greyzz.png) repeat 0 0;
 }
+
+.question-done {
+    color:LawnGreen;
+}
+
+.question-not-done {
+    color:Red;
+}

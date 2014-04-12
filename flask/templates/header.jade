@@ -12,12 +12,13 @@ nav.navbar.navbar-default(role="navigation")
       a.navbar-brand(href="/")
         |Tuts-4-Sluts
     {% if session['id'] %}
+    {% raw %}
     <!-- Collect the nav links, forms, and other content for toggling -->
     .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
       ul.nav.navbar-nav.navbar-right
         li
           a(href="#")
-            |Get Topics
+            | Balance : {{currentBalance}}
         li
           a(href="#")
             |Stats
@@ -32,6 +33,7 @@ nav.navbar.navbar-default(role="navigation")
             li
               a(href="/logout")
                 |Log Out
+    {% endraw %}
     {% else %}
 
     .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")

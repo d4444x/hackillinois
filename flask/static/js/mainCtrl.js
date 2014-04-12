@@ -7,6 +7,7 @@
     $scope.currentTitle = 'Select a Question';
     $scope.currentQuestionId = '';
     $scope.answeredQuestions = [];
+    $scope.currentBalance = 0.0;
 
     // Getting questions functionality
     $scope.getQuestion = function(sectionName, level, number, callback) {
@@ -68,7 +69,27 @@
           callback(status, data);
         });
     }
+
+    $scope.getBalance = function(callback) {
+      $http.get('/credit/').
+        success(function(data, status, headers, config) {
+          callback(null, data);
+        }).
+        error(function(data, status, headers, config) {
+          callback(status, data);
+        });
+    }
     // End Get questions functionality
+
+    $scope.updateBalance = function() {
+      $scope.getBalance(function(err, data) {
+        if (err) {
+          console.log("oh no" + err);
+          return;
+        }
+        $scope.currentBalance = data.credit;
+      })
+    }
 
     $scope.submitAnswer = function() {
 
@@ -76,6 +97,7 @@
         success(function(data, status, headers, config) {
 
           if (data.correct) {
+            $scope.updateBalance();
             $scope.answeredQuestions.push($scope.currentQuestionId);
           }
           // console.log(data);
@@ -176,6 +198,8 @@
       }
       $scope.sections = res.sections;
     });
+
+    $scope.updateBalance();
 
     //
     // Utility/Internal functions

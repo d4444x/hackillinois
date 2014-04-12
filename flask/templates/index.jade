@@ -23,10 +23,10 @@
                       | {{level}}
                     ul
                       li(ng-repeat="question in questions[section][level] | orderBy:'toString()'", on-finish-render-question)
-                        span.glyphicon(ng-click='selectQuestion(section, level, question)' ng-class="hasAnswered(section,level,question)?'glyphicon-ok-sign':'glyphicon-question-sign'")
+                        span.glyphicon(ng-click='selectQuestion(section, level, question)' ng-class="hasAnswered(section,level,question)?'question-done glyphicon-ok-sign':'question-not-done glyphicon-question-sign'")
                           nbsp
                           a(href="")
-                            | {{question}}
+                            | ${{question}}
 
 
     {% endraw %}
