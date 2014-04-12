@@ -3,6 +3,7 @@ from firebase import firebase
 import sendgrid
 import lob
 import APIconstants
+import make_text
 import hashlib
 import time
 import pyjade
@@ -79,6 +80,7 @@ def answer():
             if sectionComplete(qid.split('/')[3]):
                 mailCert(user['username']) 
             else:
+                make_text.text_person(user['phone'],'Your child has successfully completed '+ qid.split('/')[3]+ ' level '+ qid.split('/')[5])
                 email(user['email'], qid.split('/')[3], qid.split('/')[5])
         else:
             print 'not complete'
