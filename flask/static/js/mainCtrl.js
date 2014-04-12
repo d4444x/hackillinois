@@ -5,6 +5,7 @@
     $scope.questions = {};
     $scope.currentQuestion = '';
     $scope.currentTitle = '';
+    $scope.currentQuestionId = '';
 
     // Getting questions functionality
     $scope.getQuestion = function(sectionName, level, number, callback) {
@@ -71,6 +72,7 @@
         console.log(res.question);
         $scope.currentQuestion = res.question;
         $scope.currentTitle = res.title;
+        $scope.currentQuestionId = '/questions/sections/'+section+'/level/'+level+'/P'+question;
       })      
     }
 

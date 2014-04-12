@@ -2,13 +2,13 @@
 h3 {{currentTitle}}
   .well
       ul.list-group
-        li.list-group-item(style='text-align: center;')
+        li.list-group-item
           b(ng-bind-html='currentQuestion')
       form(action='/answer/', method='POST')
         .form-group
           label.answer Answer:
           .answer(name='answer')
-            input.form-control(type='text')
-            input(name='qid', value='/questions/sections/math/level/one/P1', type='hidden')
+            input.form-control(name='answer', type='text')
+            input(name='qid', value='{{currentQuestionId}}', type='hidden')
         button.btn.btn-info(type='submit') Submit Answer
 {% endraw %}
