@@ -22,6 +22,10 @@ def getAnswered():
         return redirect(url_for('index'))
     return firebase.get('/users', session['id'])['answered']
 
+@app.route('/payments/')
+def payments():
+    return render_template('payments.jade')
+
 def levelComplete(section, level):
     answered = getAnswered()
     levels = firebase.get('/questions/sections/' + section + '/level/' + level, None)
