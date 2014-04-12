@@ -6,6 +6,7 @@
     $scope.currentQuestion = '';
     $scope.currentTitle = '';
     $scope.currentQuestionId = '';
+    $scope.answeredQuestions = [];
 
     // Getting questions functionality
     $scope.getQuestion = function(sectionName, level, number, callback) {
@@ -59,7 +60,13 @@
     }
 
     $scope.getAnsweredQuestions = function(callback) {
-
+      $http.get('/answered').
+        success(function(data, status, headers, config) {
+          callback(null, data);
+        }).
+        error(function(data, status, headers, config) {
+          callback(status, data);
+        });
     }
     // End Get questions functionality
 
@@ -107,6 +114,10 @@
       });
     }
 
+    $scope.hasAnswered = function (section, level, question) {
+      return $scope.answeredQuestions.indexOf('/questions/sections/'+section+'/level/'+level+'/P'+question) > -1;
+    }
+
     // TODO: Need to rewrite this
     $scope.$on('sectionEnumerated', function(ngRepeatFinishedEvent) {
       // console.log(ngRepeatFinishedEvent);
@@ -125,8 +136,16 @@
       });
     });
 
+    $scope.getAnsweredQuestions(function(err, res) {
+      if (err) {
+        console.log("oh no" + err);
+        return;
+      }
+      $scope.answeredQuestions = res.split(" ");
+    });
+
     // Init the sections  
-    $scope.getSections(function(err,res) {
+    $scope.getSections(function(err, res) {
       if (err) {
         console.log("oh no" + err);
         return;
