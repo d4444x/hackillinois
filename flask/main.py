@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, render_template, send_from_directory, request, session, redirect, url_for
 from firebase import firebase
+import sendgrid
+import APIconstants
 import hashlib
 import time
 import pyjade
@@ -51,7 +53,7 @@ def answer():
             if sectionComplete(qid.split('/')[3]):
                 print "section complete"
             else:
-                print "level complete"
+                email(user['email'])
         else:
             print 'not complete'
         #iflevel, section?
@@ -92,13 +94,20 @@ def login():
             session['id'] = uid
     return redirect(url_for('index'))
 
+@app.route('/logout/')
+def logout():
+    session.pop('id',None)
+    return redirect(url_for('index'))
+
 @app.route('/register/', methods=['POST'])
 def registerPost():
     username = request.form['username']
     password = hashlib.sha1(request.form['password']).hexdigest()
+    email = request.form['email']
+    phone = request.form['phone']
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':'', 'times':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
@@ -108,7 +117,7 @@ def registerGet(username, password):
     password = hashlib.sha1(password).hexdigest()
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'credit':0, 'answered':'', 'times':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'email':'test@test.com', 'phone':'9999999999', 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
@@ -118,6 +127,17 @@ def userExists(user):
         if users[uid]['username'] == user:
             return True
     return False
+
+def email(email):
+    sg = sendgrid.SendGridClient('DaxEarl', SENDGRIDPASS)
+    message = sendgrid.Mail()
+    message.add_to(email)
+    message.set_subject('Your child has completed a section')
+    message.set_html('You have a cool loot for a child')
+    message.set_text('This is text')
+    message.set_from('toots4sloots<toots4loots@sendgrid.net>')
+    status, msg = sg.send(message)
+    print "sent "+email +" an email"
 
 if __name__ == '__main__':
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
