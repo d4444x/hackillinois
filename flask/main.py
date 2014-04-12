@@ -14,17 +14,30 @@ firebase = firebase.FirebaseApplication('https://rhtuts.firebaseio.com/', None)
 @app.route('/')
 @app.route('/index/')
 def index():
+    if not 'id' in  session:
+        return redirect(url_for('login'))
     return render_template('index.jade')
 
 @app.route('/answered/')
 def getAnswered():
     if not 'id' in  session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     return firebase.get('/users', session['id'])['answered']
 
 @app.route('/payments/')
 def payments():
+    if not 'id' in  session:
+        return redirect(url_for('login'))
     return render_template('payments.jade')
+
+@app.route('/paid/')
+def payed():
+    if not 'id' in session:
+        return redirect(url_for('login'))
+    amount = 1.00*float(request.args['amount'])
+    user = getUserDict(session['id'])
+    firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']+amount, 'answered':user['answered'], 'times':user['times']})
+    return render_template('payment_successful.jade')
 
 def levelComplete(section, level):
     answered = getAnswered()
@@ -50,7 +63,7 @@ def sectionComplete(section):
 @app.route('/answer/', methods=['POST'])
 def answer():
     if not 'id' in  session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     jres = request.get_json()
     qid = jres['qid']
     answer = jres['answer']
@@ -76,33 +89,43 @@ def answer():
 @app.route('/ask/<section>/<level>/<number>')
 def ask(section, level, number):
     if not 'id' in  session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     question = firebase.get('/questions/sections/' + section + '/level/' + level + '/' + number, None)
     return jsonify(question)
 
 @app.route('/ask/')
 def sections():
     if not 'id' in  session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     sections = firebase.get('/questions/sections', None)
     return jsonify({'sections':list(sections)})
 
 @app.route('/ask/<section>')
 def levels(section):
     if not 'id' in  session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     levels = firebase.get('/questions/sections/' + section + '/level', None)
     return jsonify({section:list(levels)})
 
 @app.route('/ask/<section>/<level>')
 def questions(section, level):
     if not 'id' in  session:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
     questions = firebase.get('/questions/sections/' + section + '/level/' + level, None)
     return jsonify({section:{level:list(questions)}})
 
+@app.route('/credit/')
+def credit():
+    if not 'id' in session:
+        return redirect(url_for('login'))
+    return jsonify({'credit':firebase.get('/users', session['id'])['credit']})
+
 def getUserDict(uid):
     return firebase.get('/users', uid)
+
+@app.route('/login/')
+def loginGet():
+    return render_template('login.jade')
 
 @app.route('/login/', methods=['POST'])
 def login():
@@ -131,6 +154,10 @@ def registerPost():
     result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
+
+@app.route('/register/')
+def register():
+    return render_template('register.jade')
 
 @app.route('/register/<username>/<password>')
 def registerGet(username, password):

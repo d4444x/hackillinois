@@ -9,9 +9,9 @@ nav.navbar.navbar-default(role="navigation")
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(href="#")
-        |Toots-4-Sloots
-
+      a.navbar-brand(href="/")
+        |Tuts-4-Sluts
+    {% if session['id'] %}
     <!-- Collect the nav links, forms, and other content for toggling -->
     .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
       ul.nav.navbar-nav.navbar-right
@@ -32,3 +32,11 @@ nav.navbar.navbar-default(role="navigation")
             li
               a(href="/logout")
                 |Log Out
+    {% else %}
+
+    .collapse.navbar-collapse(id="bs-example-navbar-collapse-1")
+      ul.nav.navbar-nav.navbar-right
+        li
+          a(href="/register")
+            | Register
+    {% endif %}

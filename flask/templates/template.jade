@@ -15,15 +15,7 @@ html
 
   body(ng-app="tutsApp")
     div.container(ng-controller="MainCtrl")
-      {% if session['id'] %}
-
       include header
-      
+
       {% block content %}
       {% endblock %}
-
-      {% else %}
-
-      include login
-
-      {% endif %}
