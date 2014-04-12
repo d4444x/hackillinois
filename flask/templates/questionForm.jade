@@ -4,7 +4,7 @@ h3 {{currentTitle}}
       ul.list-group
         li.list-group-item
           b(ng-bind-html='currentQuestion')
-      form(action='/answer/', method='POST')
+      form(action='/answer/', method='POST',ng-submit='submitAnswer()')
         .form-group
           label.answer Answer:
           .answer(name='answer')

@@ -25,7 +25,7 @@ h1 Tuts-4-Sluts
                       | {{level}}
                     ul
                       li(ng-repeat="question in questions[section][level]", on-finish-render-question)
-                        span.glyphicon.glyphicon-question-sign(ng-click='selectQuestion(section, level, question)' ng-class="hadAnswered(section,level,question)?'glyphicon-check-sign':'glyphicon-question-sign'")
+                        span.glyphicon(ng-click='selectQuestion(section, level, question)' ng-class="hasAnswered(section,level,question)?'glyphicon-ok-sign':'glyphicon-question-sign'")
                           nbsp
                           a(href="")
                             | {{question}}
