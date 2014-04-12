@@ -73,15 +73,20 @@
     $scope.submitAnswer = function() {
 
       $http.post('/answer/', {'qid':$scope.currentQuestionId, 'answer':$scope.currentAnswer}).
-        success(function(data, status, headers, config) {          
-          $scope.getAnsweredQuestions(function(err, res) {
-            if (err) {
-              console.log("oh no" + err);
-              return;
-            }
-            $scope.answeredQuestions = res.split(" ");
-          });
-          
+        success(function(data, status, headers, config) {
+
+          if (data.correct) {
+            $scope.answeredQuestions.push($scope.currentQuestionId);
+          }
+          // console.log(data);
+          // $scope.getAnsweredQuestions(function(err, res) {
+          //   if (err) {
+          //     console.log("oh no" + err);
+          //     return;
+          //   }
+          //   $scope.answeredQuestions = res.split(" ");
+          // });
+
         }).
         error(function(data, status, headers, config) {
           console.log('oh no' + status);
@@ -95,7 +100,6 @@
           console.log("oh no" + err);
           return;
         }
-        console.log(res.question);
         $scope.currentQuestion = res.question;
         $scope.currentTitle = res.title;
         $scope.currentQuestionId = '/questions/sections/'+section+'/level/'+level+'/P'+question;
