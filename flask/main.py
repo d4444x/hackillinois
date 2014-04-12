@@ -31,4 +31,4 @@ if __name__ == '__main__':
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
     app.debug = True
     app.port = 80
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=5000)

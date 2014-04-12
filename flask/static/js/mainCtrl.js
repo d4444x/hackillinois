@@ -1,37 +1,58 @@
 function MainCtrl($scope, $http) {
 
   // Getting questions functionality
+
   function getQuestion(sectionName, level, number, callback) {
-    
-  }
-
-  function getQuestions(sectionName, level, callback) {
-
-  }
-
-  function getLevels(sectionName, callback) {
-
-  }
-
-  function getSections(callback) {
-    $http({method: 'GET', url: '/ask'}).
+       $http.get('/ask'+"/"+sectionName+"/"+level+"/"+number).
       success(function(data, status, headers, config) {
         callback(null, data);
-        // this callback will be called asynchronously
-        // when the response is available
       }).
       error(function(data, status, headers, config) {
         callback(status, data);
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
       });
   }
 
-  function submitAnswer(sectionName, level, number, callback) {
-
+  function getQuestions(sectionName, level, callback) {
+    $http.get('/ask'+"/"+sectionName+"/"+level).
+      success(function(data, status, headers, config) {
+        callback(null, data);
+      }).
+      error(function(data, status, headers, config) {
+        callback(status, data);
+      });
   }
 
-  function getAnsweredQuestions() {
+  function getLevels(sectionName, callback) {
+    $http.get('/ask'+"/"+sectionName).
+      success(function(data, status, headers, config) {
+        callback(null, data);
+      }).
+      error(function(data, status, headers, config) {
+        callback(status, data);
+      });
+  }
+
+  function getSections(callback) {
+    $http.get('/ask').
+      success(function(data, status, headers, config) {
+        callback(null, data);
+      }).
+      error(function(data, status, headers, config) {
+        callback(status, data);
+      });
+  }
+
+  function submitAnswer(sectionName, level, number, data, callback) {
+    $http.post('/answer'+"/"+sectionName+"/"+level+"/"+number, data).
+      success(function(data, status, headers, config) {
+        callback(null, data);
+      }).
+      error(function(data, status, headers, config) {
+        callback(status, data);
+      });
+  }
+
+  function getAnsweredQuestions(callback) {
 
   }
 }

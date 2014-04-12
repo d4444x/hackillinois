@@ -13,5 +13,6 @@ html
 
   body(ng-app="tutsApp")
     div.container(ng-controller="MainCtrl")
-     {% block content %}
-     {% endblock %}
+      include header
+      {% block content %}
+      {% endblock %}
