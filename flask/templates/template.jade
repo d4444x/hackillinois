@@ -1,0 +1,11 @@
+html(ng-app="htmldoc")
+   head
+      title Flask Stuff
+      script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.5/angular.min.js")
+      script(src="/static/js/todo.js")
+   body
+      div this shows up if it works
+      div.container
+         {% block content %}
+         {% endblock %}
+         
