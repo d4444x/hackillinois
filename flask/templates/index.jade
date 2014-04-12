@@ -1,4 +1,10 @@
 {% extends "template.jade" %}
 {% block content %}
-h2 This is my jade stuff
+h1 Jade - node template engine
+  #container.col
+    .well
+      p You are fucked
+      input(type="text", ng-model="yourName", placeholder="Enter a name here")
+    h3
+      {{yourName}}
 {% endblock %}
