@@ -7,6 +7,7 @@
     $scope.currentTitle = 'Select a Question';
     $scope.currentQuestionId = '';
     $scope.answeredQuestions = [];
+    $scope.openSections = [];
     $scope.currentBalance = 0.0;
 
     // Getting questions functionality
@@ -79,7 +80,23 @@
           callback(status, data);
         });
     }
+
+    $scope.getOpenSections = function(callback) {
+      $http.get('/getOpenSections/').
+        success(function(data, status, headers, config) {
+          callback(null, data);
+        }).
+        error(function(data, status, headers, config) {
+          callback(status, data);
+        });
+    }
     // End Get questions functionality
+
+    $scope.filterOpenSections = function () {
+      return $scope.letters.filter(function (letter) {
+        return $scope.filterBy.indexOf(letter.id) !== -1;
+      });
+    };
 
     var showAnswerResult = function(correct) {
       angular.element('#answer-status').css(correct?{ "color": "green" }:{ "color": "red"})
@@ -213,6 +230,16 @@
         return;
       }
       $scope.sections = res.sections;
+      $scope.expandSection($scope.sections[1]);
+    });
+
+    $scope.getOpenSections(function(err, res) {
+      if (err) {
+        console.log("oh no" + err);
+        return;
+      }
+      $scope.openSections = res.sections.split(" ");
+      console.log($scope.openSections);
     });
 
     $scope.updateBalance();
@@ -220,9 +247,18 @@
     //
     // Utility/Internal functions
     //
-    function capitalizeEachWord(str) {
+    $scope.capitalizeEachWord = function(str) {
       return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
+  })
+  .filter('inArray', function($filter){
+    return function(list, arrayFilter){
+      if(arrayFilter){
+        return $filter("filter")(list, function(listItem){
+          return arrayFilter.indexOf(listItem) != -1;
+        });
+      }
+    };
   })
   ////////////////
   // Directives //

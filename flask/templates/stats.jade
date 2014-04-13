@@ -1,0 +1,26 @@
+{% extends "template.jade" %}
+{% block content %}
+#container.col
+  .col-md-3.full-hight
+    
+  .col-md-6.full-height
+    {% raw %}
+    h1
+      | Statistics
+    .well.well-sm
+      .well
+        h2
+          | Welcome to our stats page
+        | Please Select a course:
+        select#e1(style='width:100%;')
+          option(value='Math') Math
+          option(value='Programming') Programming
+          option(value='MethProd') Methamphetamine Production
+        br
+        br
+
+    {% endraw %}
+
+  .col-md-3.full-height
+
+{% endblock %}

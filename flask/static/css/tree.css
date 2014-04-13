@@ -71,3 +71,11 @@ body{
 .question-not-done {
     color:Red;
 }
+
+#container > div.col-md-4.full-hight > div > div > ul {
+    padding-left: 10px;
+}
+
+.badge-success {
+  color: #468847;
+}

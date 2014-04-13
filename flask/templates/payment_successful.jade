@@ -1,19 +1,37 @@
 {% extends "template.jade" %}
 {% block content %}
+link(href='/static/select2/select2.css', rel='stylesheet')
+script(src='/static/select2/select2.js')
+script
+      $(document).ready(function() { 
+        $("#e1").select2({
+        })
+      });
+
 #container.col
   .col-md-3.full-hight
     
   .col-md-6.full-height
     {% raw %}
     h1
-      | Purchase
+      | Purchase Sucessful
     .well.well-sm
       .well
         h2
-          | Congrats to you. We now have your money. and you have less.
+          | Congratulations on your purchase!
 
-        h1
-          | Sucks to suck.
+        h3
+          | Please select a class that you wish to purchase
+        | Please Select a course:
+        form(method="post", action="/addSection/")
+          select#e1(style='width:100%;', name='section')
+            option(value='math') Math
+            option(value='programming') Programming
+          br
+          h3
+            button.btn.btn-primary(type="submit", value="Submit")
+              | Submit
+        | We look forward to learning with you.
     {% endraw %}
 
   .col-md-3.full-height

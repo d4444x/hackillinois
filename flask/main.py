@@ -40,7 +40,7 @@ def addSection():
         firebase.put('/users', session['id'], {'sectionsOpen':request.form['section'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':user['answered'], 'times':user['times']})
     else:
         firebase.put('/users', session['id'], {'sectionsOpen':user['sectionsOpen']+' '+request.form['section'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':user['answered'], 'times':user['times']})
-    return jsonify({'status':'success'})
+    return redirect(url_for('index'))
 
 @app.route('/getOpenSections/')
 def openSections():
