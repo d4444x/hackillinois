@@ -34,7 +34,10 @@ def getStats():
 
 @app.route('/getGraph/')
 def getGraph():
-    return graph.getGraph(session['id'])
+    g = graph.getGraph(session['id'])
+    print g
+    return g
+
 
 @app.route('/payments/')
 def payments():
