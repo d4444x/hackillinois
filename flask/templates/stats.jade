@@ -1,15 +1,24 @@
 {% extends "template.jade" %}
 {% block content %}
+{% raw %}
 #container.col(ng-init="getThoseStats()")
   h1
       | Statistics
-    {% raw %}
-  .col-md-6.full-hight
-    .well.well-sm
-      
-  .col-md-6.full-height
-    .well.well-sm
-      
-    {% endraw %}
+  .col-md-3.full-hight
 
+  .col-md-6.full-hight
+    .well.well-sm      
+      div(style="-webkit-transform: rotate(-90deg);
+                 position: relative;
+                 left: -260px;
+                 top: -40px;")
+        | Problems Solved
+
+      div(style="text-align:center;")
+        img(ng-src="{{stats['math']}}", width=480)
+        | Amount of time Dax is gone vs time spent at hackathon.
+      
+  .col-md-3.full-height
+      
+{% endraw %}
 {% endblock %}

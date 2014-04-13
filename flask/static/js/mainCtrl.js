@@ -9,6 +9,7 @@
     $scope.answeredQuestions = [];
     $scope.openSections = [];
     $scope.currentBalance = 0.0;
+    $scope.stats = {};
 
     // Getting questions functionality
     $scope.getQuestion = function(sectionName, level, number, callback) {
@@ -108,7 +109,7 @@
           console.log("oh no" + err);
           return;
         }
-        console.log(data);
+        $scope.stats = data;
       })
     }
 
