@@ -6,6 +6,7 @@ import APIconstants
 import make_text
 import hashlib
 import time
+import graph
 import pyjade
 app = Flask(__name__)
 
@@ -31,6 +32,9 @@ def getStats():
         return redirect(url_for('login'))
     return render_template('stats.jade')
 
+@app.route('/getGraph/')
+def getGraph():
+    return graph.getGraph(session['id'])
 
 @app.route('/payments/')
 def payments():
