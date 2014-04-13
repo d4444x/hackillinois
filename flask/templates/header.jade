@@ -5,12 +5,12 @@ nav.navbar.navbar-default(role="navigation")
     .navbar-header
       button(type="button",class="navbar-toggle",data-toggle="collapse",data-target="#bs-example-navbar-collapse-1")
         span.sr-only
-          |Toggle navigation
+          | Toggle navigation
         span.icon-bar
         span.icon-bar
         span.icon-bar
       a.navbar-brand(href="/")
-        |Tuts-4-Sluts
+        | IncenToLearn
     {% if session['id'] %}
     {% raw %}
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -29,10 +29,10 @@ nav.navbar.navbar-default(role="navigation")
           ul.dropdown-menu
             li
               a(href="/payments")
-                |Payments
+                | Payments
             li
               a(href="/logout")
-                |Log Out
+                | Log Out
     {% endraw %}
     {% else %}
 

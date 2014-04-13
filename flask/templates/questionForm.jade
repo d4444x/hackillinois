@@ -11,5 +11,6 @@ h3 {{currentTitle}}
             input.form-control(ng-model='currentAnswer', type='text')
         input.btn.btn-primary(type="submit" id="submit" value="Submit Answer")
         nbsp
-        span.glyphicon.glyphicon-ok-sign(style='color:LawnGreen;font-size:30px;vertical-align:middle;')
+        img(src="/static/img/loading.gif", id="loading-img", style="display:none")
+        span#answer-status.glyphicon(style='display:none;font-size:30px;vertical-align:middle;')
 {% endraw %}

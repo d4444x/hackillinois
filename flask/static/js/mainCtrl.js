@@ -81,6 +81,18 @@
     }
     // End Get questions functionality
 
+    var showAnswerResult = function(correct) {
+      angular.element('#answer-status').css(correct?{ "color": "green" }:{ "color": "red"})
+      var newClass = correct?'glyphicon-ok-sign':'glyphicon-remove-sign';
+
+      angular.element('#answer-status').addClass(newClass)
+      angular.element('#answer-status').fadeIn(600, function() {
+        angular.element('#answer-status').fadeOut(500, function() {
+          angular.element('#answer-status').removeClass(newClass);
+        });
+      });
+    }
+
     $scope.updateBalance = function() {
       $scope.getBalance(function(err, data) {
         if (err) {
@@ -92,11 +104,14 @@
     }
 
     $scope.submitAnswer = function() {
-
+      angular.element("#loading-img").show();
       $http.post('/answer/', {'qid':$scope.currentQuestionId, 'answer':$scope.currentAnswer}).
         success(function(data, status, headers, config) {
+          angular.element("#loading-img").hide();
 
-          if (data.correct) {
+          var correct = data.correct === 'true';
+          showAnswerResult(correct);
+          if (correct) {
             $scope.updateBalance();
             $scope.answeredQuestions.push($scope.currentQuestionId);
           }
@@ -113,7 +128,7 @@
         error(function(data, status, headers, config) {
           console.log('oh no' + status);
         });
-      console.log('nop');
+      // console.log('nop');
     }
 
     $scope.selectQuestion = function(section, level, question) {
@@ -156,7 +171,7 @@
         for (var i = res[currentSection][currentLevel].length - 1; i >= 0; i--) {
           $scope.questions[currentSection][currentLevel][i] = res[currentSection][currentLevel][i].substring(1);
         };
-        console.log($scope.questions[currentSection][currentLevel]);
+        // console.log($scope.questions[currentSection][currentLevel]);
       });
     }
 
@@ -168,7 +183,8 @@
     $scope.$on('sectionEnumerated', function(ngRepeatFinishedEvent) {
       // console.log(ngRepeatFinishedEvent);
       $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-      $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').on('click', function (e) {
+      // $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').off('click');
+      $('.tree').find('li:has(ul)').not('.parent_li').addClass('parent_li').attr('role', 'treeitem').find(' > span').on('click', function (e) {
         var children = $(this).parent('li.parent_li').find(' > ul > li');
         if (children.is(':visible')) {
           children.hide('fast');
@@ -252,10 +268,8 @@
       restrict : 'A',
       link : function(scope, element, attr) {
         if (!!!scope.currentQuestion.question) {
-          console.log("g");
           return;
         }
-        console.log('h');
         var tag = scope.currentQuestion.question;
         angular.element(element[0]).html('<b>Click</b>');
       }
