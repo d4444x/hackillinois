@@ -17,6 +17,17 @@
             .controls
               input.form-control(name='email', type='text')
           .form-group
+            label.email Notifications
+            .controls
+              input(name='txt-updates', type='checkbox',checked) 
+              |Send me Text Message Updates 
+              br
+              input(name='email-updates', type='checkbox',checked) 
+              |Email me Updates 
+              br
+              input(name='mail-updates', type='checkbox',checked) 
+              |Mail me Updates upon course completion ($1.99 per mailed item)
+          .form-group
             label.phone Parent Phone #
             .controls
               input.form-control(name='phone', type='text')
