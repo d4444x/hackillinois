@@ -17,13 +17,13 @@
                   nbsp
                   | {{capitalizeEachWord(section)}}
                 ul
-                  li(ng-repeat="level in levels[section] | orderBy:'toString()'", on-finish-render-level)
-                    span.glyphicon.glyphicon-plus-sign(ng-click='expandLevel(section, level)')
+                  li(ng-repeat="level in levels[section] | orderBy:sort | reverse", on-finish-render-level)
+                    span.glyphicon.glyphicon-plus-sign(ng-click='expandLevel(section, level.name)')
                       nbsp
-                      | {{capitalizeEachWord(level)}}
+                      | {{capitalizeEachWord(level.name)}}
                     ul
-                      li(ng-repeat="question in questions[section][level] | orderBy:'toString()'", on-finish-render-question)
-                        span.glyphicon(ng-click='selectQuestion(section, level, question)' ng-class="hasAnswered(section,level,question)?'question-done glyphicon-ok-sign':'question-not-done glyphicon-question-sign'")
+                      li(ng-repeat="question in questions[section][level.name] | orderBy:'toString()'", on-finish-render-question)
+                        span.glyphicon(ng-click='selectQuestion(section, level.name, question)' ng-class="hasAnswered(section,level.name,question)?'question-done glyphicon-ok-sign':'question-not-done glyphicon-question-sign'")
                           nbsp
                           a(href="")
                             | ${{question}}

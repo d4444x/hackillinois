@@ -10,7 +10,7 @@
     $scope.openSections = [];
     $scope.currentBalance = 0.0;
     $scope.stats = {};
-
+    
     // Getting questions functionality
     $scope.getQuestion = function(sectionName, level, number, callback) {
          $http.get('/ask'+"/"+sectionName+"/"+level+"/"+number).
@@ -143,7 +143,7 @@
 
     $scope.submitAnswer = function() {
       angular.element("#loading-img").show();
-      $http.post('/answer/', {'qid':$scope.currentQuestionId, 'answer':$scope.currentAnswer}).
+      $http.post('/answer/', {'qid':$scope.currentQuestionId, 'answer':$scope.currentAnswer.toLowerCase()}).
         success(function(data, status, headers, config) {
           angular.element("#loading-img").hide();
 
@@ -153,20 +153,10 @@
             $scope.updateBalance();
             $scope.answeredQuestions.push($scope.currentQuestionId);
           }
-          // console.log(data);
-          // $scope.getAnsweredQuestions(function(err, res) {
-          //   if (err) {
-          //     console.log("oh no" + err);
-          //     return;
-          //   }
-          //   $scope.answeredQuestions = res.split(" ");
-          // });
-
         }).
         error(function(data, status, headers, config) {
           console.log('oh no' + status);
         });
-      // console.log('nop');
     }
 
     $scope.selectQuestion = function(section, level, question) {
@@ -188,7 +178,15 @@
           return;
         }
         var currentSection = Object.keys(res)[0];
-        $scope.levels[Object.keys(res)[0]] = res[Object.keys(res)[0]];
+
+        var mapz = {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5};
+        var tmp = [];
+        angular.forEach(res[Object.keys(res)[0]], function(value, key){
+
+          tmp.push({ name: value, sort: mapz[value]});
+        });
+
+        $scope.levels[Object.keys(res)[0]] = tmp;
       });
     }
 
@@ -217,11 +215,11 @@
       return $scope.answeredQuestions.indexOf('/questions/sections/'+section+'/level/'+level+'/P'+question) > -1;
     }
 
-    // TODO: Need to rewrite this
     $scope.$on('sectionEnumerated', function(ngRepeatFinishedEvent) {
-      // console.log(ngRepeatFinishedEvent);
+      // Group all .trees
       $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
-      // $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').off('click');
+
+      //
       $('.tree').find('li:has(ul)').not('.parent_li').addClass('parent_li').attr('role', 'treeitem').find(' > span').on('click', function (e) {
         var children = $(this).parent('li.parent_li').find(' > ul > li');
         if (children.is(':visible')) {
@@ -279,6 +277,11 @@
           return arrayFilter.indexOf(listItem) != -1;
         });
       }
+    };
+  })
+  .filter('reverse', function() {
+    return function(items) {
+      return items.slice().reverse();
     };
   })
   ////////////////
