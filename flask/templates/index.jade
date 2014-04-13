@@ -12,15 +12,15 @@
               nbsp
               | Courses
             ul              
-              li(ng-repeat="section in sections | orderBy:'toString()'", on-finish-render-section)
+              li(ng-repeat="section in sections | inArray:openSections | orderBy:'toString()'", on-finish-render-section)
                 span.glyphicon.glyphicon-plus-sign(ng-click='expandSection(section)')
                   nbsp
-                  | {{section}}
+                  | {{capitalizeEachWord(section)}}
                 ul
                   li(ng-repeat="level in levels[section] | orderBy:'toString()'", on-finish-render-level)
                     span.glyphicon.glyphicon-plus-sign(ng-click='expandLevel(section, level)')
                       nbsp
-                      | {{level}}
+                      | {{capitalizeEachWord(level)}}
                     ul
                       li(ng-repeat="question in questions[section][level] | orderBy:'toString()'", on-finish-render-question)
                         span.glyphicon(ng-click='selectQuestion(section, level, question)' ng-class="hasAnswered(section,level,question)?'question-done glyphicon-ok-sign':'question-not-done glyphicon-question-sign'")

@@ -18,9 +18,9 @@ nav.navbar.navbar-default(role="navigation")
       ul.nav.navbar-nav.navbar-right
         li
           a(href="#")
-            | Balance : {{currentBalance}}
+            | Balance : {{currentBalance | number:2}}
         li
-          a(href="#")
+          a(href="/stats")
             |Stats
         li.dropdown
           a.dropdown-toggle(href="#",data-toggle="dropdown")
