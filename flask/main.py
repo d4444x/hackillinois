@@ -7,6 +7,7 @@ import make_text
 import hashlib
 import time
 import graph
+import wolfram_stuff
 import pyjade
 app = Flask(__name__)
 
@@ -99,7 +100,7 @@ def answer():
     qid = jres['qid']
     answer = jres['answer']
     question = firebase.get(qid,None)
-    if str(question['answer']) == str(answer):
+    if wolfram_stuff.checkEquality(str(question['answer']),str(answer)):
         user = getUserDict(session['id'])
         if user['answered'].find(qid) == -1:
             if len(user['answered']) == 0:
@@ -185,7 +186,7 @@ def registerPost():
         return redirect(url_for('login'))
     result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':'', 'sectionsOpen':''})
     session['id'] = result['name']
-    return redirect(url_for('index'))
+    return redirect(url_for('payments'))
 
 @app.route('/register/')
 def register():
@@ -199,7 +200,7 @@ def registerGet(username, password):
         return redirect(url_for('index'))
     result = firebase.post('/users', {'username':username, 'password':password, 'email':'test@test.com', 'phone':'9999999999', 'credit':0, 'answered':'', 'times':'', 'sectionsOpen':''})
     session['id'] = result['name']
-    return redirect(url_for('index'))
+    return redirect(url_for('payments'))
 
 def userExists(user):
     users = firebase.get('/users',None)
@@ -214,7 +215,7 @@ def email(email, section, level):
     message.add_to(email)
     message.set_subject('Your child has completed a level')
     message.set_html('Your child has completed the ' + section + ' section level ' + level + '<br>')
-    message.set_from('toots4sloots<toots4loots@sendgrid.net>')
+    message.set_from('IncenToLearn<IncenToLearn@sendgrid.net>')
     status, msg = sg.send(message)
     print "sent "+email +" an email"
 
@@ -225,6 +226,7 @@ def mailCert(username):
     to_address = {'name' : 'Suzy', 'address_line1' : '220 William T Morrissey', 'address_line2' : 'Sunset Town', 'address_city' : 'Boston', 'address_state' : 'MA', 'address_country' : 'US',                    'address_zip' : '02125'}
     lobjobdict = lob.Job.create(name='Suzy Math Award', to=to_address, objects=obj, from_address=from_address, packaging_id='7').to_dict()
     print 'Certification Sent'
+    print obj
 
 if __name__ == '__main__':
     app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
