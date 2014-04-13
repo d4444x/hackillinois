@@ -1,0 +1,51 @@
+{% extends "template.jade" %}
+{% block content %}
+div(style="text-align:center;")
+  h1 Welcome to
+    img(src="http://i.imgur.com/xb3YlBw.png")
+    br
+  h2
+    | where learning is just a click away!
+  hr
+.container.col
+  .col-md-3.full-hight
+    .well.well-sm
+      h3
+        | Our Vision
+      hr
+      h4
+        | We aim to provide a higher quality of learning than what is typical.
+      br
+      br
+      h4
+        | Our goal is to motivate children and young adults to learn, both what is common in the classroom and beyond.
+  .col-md-6.full-height
+    {% raw %}
+    h2
+      | Product
+    .well.well-sm
+      h3
+        | Our innovative web learning system is designed to use monetary incentives to motivate young adults to learn new concepts and fortify old ones.
+
+      br
+      h4
+        | After investing an initial deposit into our system, your child will answer questions about topics that range from Art History to Advanced Mathematics.
+      br
+      h4
+        | We grant you full control over which topics your young adult is quizzed on. We also have the option to send emails, text messages and/or certificates by way of hte postal service, so as to keep up with your child's active learning process.
+    {% endraw %}
+
+  .col-md-3.full-height
+
+    h2
+      | Purchasing
+
+    .panel
+      h4
+        | Investing in your son or daughter's future is easy, simply open the accounts menu in the top right corner of our site. Select "Payments." 
+
+      br
+
+      h4
+        | From there you will be able to deposit money into your IncenToLearn profile that your child can then earn back through the learning process.
+{% endblock %}
