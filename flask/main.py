@@ -36,7 +36,7 @@ def getStats():
 def getGraph():
     g = graph.getGraph(session['id'])
     print g
-    return g
+    return jsonify(g) 
 
 
 @app.route('/payments/')

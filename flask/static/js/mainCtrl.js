@@ -81,6 +81,16 @@
         });
     }
 
+    $scope.getStats = function(callback) {
+      $http.get('/getGraph/').
+        success(function(data, status, headers, config) {
+          callback(null, data);
+        }).
+        error(function(data, status, headers, config) {
+          callback(status, data);
+        });
+    }
+
     $scope.getOpenSections = function(callback) {
       $http.get('/getOpenSections/').
         success(function(data, status, headers, config) {
@@ -91,6 +101,16 @@
         });
     }
     // End Get questions functionality
+
+    $scope.getThoseStats = function() {
+      $scope.getStats(function(err, data) {
+        if (err) {
+          console.log("oh no" + err);
+          return;
+        }
+        console.log(data);
+      })
+    }
 
     $scope.filterOpenSections = function () {
       return $scope.letters.filter(function (letter) {
