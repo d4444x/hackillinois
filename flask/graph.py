@@ -1,11 +1,13 @@
 from firebase import firebase
 import wolfram_stuff
 import re
+import random
 
 fb = firebase.FirebaseApplication('https://rhtuts.firebaseio.com/')
 
 def getGraph(user):
     #Takes the user screwed up string thing
+    random.seed(1337)
     #takes the user returns the url to the graph
     k = fb.get('users/'+user,None)
     times = k['times'].split('; ')
