@@ -255,7 +255,7 @@
     return function(list, arrayFilter){
       if(arrayFilter){
         return $filter("filter")(list, function(listItem){
-          return true;//return arrayFilter.indexOf(listItem) != -1;
+          return arrayFilter.indexOf(listItem) != -1;
         });
       }
     };

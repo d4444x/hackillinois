@@ -1,15 +1,5 @@
 {% extends "template.jade" %}
 {% block content %}
-link(href='/static/select2/select2.css', rel='stylesheet')
-script(src='/static/select2/select2.js')
-script
-      $(document).ready(function() { 
-        $("#e1").select2({
-        }).on("change", function(e) { 
-          $('a.d-btn').attr('data-description',e.val);
-        })
-      });
-
 #container.col
   .col-md-3.full-hight
     
@@ -19,23 +9,14 @@ script
       | Purchase
     .well.well-sm
       .well
-        h2
-          | Please select a class that you wish to purchase
-        | Please Select a course:
-        select#e1(style='width:100%;')
-          option(value='Math') Math
-          option(value='Programming') Programming
-        bru
-        br
-        .dwolla-things
-          script.dwolla_button(src='/static/js/dwolla_button.js',
-                        data-key="HFyt3V7T0RZTQjb7xZLml0+7UZXYUtdSzHA0DeEHw8OPdwP/jX",
-                        data-redirect="http://localhost/paid/",
-                        data-label="Register",
-                        data-name="Tuts 4 Hire",
-                        data-description="Programming",
-                        data-amount="5.95",
-                        data-type="freetype")
+        script.dwolla_button(src='/static/js/dwolla_button.js',
+                      data-key="HFyt3V7T0RZTQjb7xZLml0+7UZXYUtdSzHA0DeEHw8OPdwP/jX",
+                      data-redirect="http://localhost/paid/",
+                      data-label="Register",
+                      data-name="IncenToLearn",
+                      data-description="",
+                      data-amount="5.95",
+                      data-type="freetype")
     {% endraw %}
 
   .col-md-3.full-height
