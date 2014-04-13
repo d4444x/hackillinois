@@ -1,26 +1,15 @@
 {% extends "template.jade" %}
 {% block content %}
-#container.col
-  .col-md-3.full-hight
-    
-  .col-md-6.full-height
-    {% raw %}
-    h1
+#container.col(ng-init="getThoseStats()")
+  h1
       | Statistics
+    {% raw %}
+  .col-md-6.full-hight
     .well.well-sm
-      .well
-        h2
-          | Welcome to our stats page
-        | Please Select a course:
-        select#e1(style='width:100%;')
-          option(value='Math') Math
-          option(value='Programming') Programming
-          option(value='MethProd') Methamphetamine Production
-        br
-        br
-
+      
+  .col-md-6.full-height
+    .well.well-sm
+      
     {% endraw %}
-
-  .col-md-3.full-height
 
 {% endblock %}
