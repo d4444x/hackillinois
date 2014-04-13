@@ -31,13 +31,29 @@ def payments():
         return redirect(url_for('login'))
     return render_template('payments.jade')
 
+@app.route('/addSection/',methods=['POST'])
+def addSection():
+    if not 'id' in session:
+        return redirect(url_for('login'))
+    user = getUserDict(session['id'])
+    if user['sectionsOpen'] == '':
+        firebase.put('/users', session['id'], {'sectionsOpen':request.form['section'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':user['answered'], 'times':user['times']})
+    else:
+        firebase.put('/users', session['id'], {'sectionsOpen':user['sectionsOpen']+' '+request.form['section'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit'], 'answered':user['answered'], 'times':user['times']})
+    return jsonify({'status':'success'})
+
+@app.route('/getOpenSections/')
+def openSections():
+    user = getUserDict(session['id'])
+    return jsonify({'sections':user['sectionsOpen']})
+
 @app.route('/paid/')
 def payed():
     if not 'id' in session:
         return redirect(url_for('login'))
     amount = 1.00*float(request.args['amount'])
     user = getUserDict(session['id'])
-    firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']+amount, 'answered':user['answered'], 'times':user['times']})
+    firebase.put('/users', session['id'], {'sectionsOpen':user['sectionsOpen'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']+amount, 'answered':user['answered'], 'times':user['times']})
     return render_template('payment_successful.jade')
 
 def levelComplete(section, level):
@@ -73,9 +89,9 @@ def answer():
         user = getUserDict(session['id'])
         if user['answered'].find(qid) == -1:
             if len(user['answered']) == 0:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-float(qid[-1]), 'answered':qid, 'times':time.strftime("%m/%d/%Y %H:%M:%S")})
+                firebase.put('/users', session['id'], {'sectionsOpen':user['sectionsOpen'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-float(qid[-1]), 'answered':qid, 'times':time.strftime("%m/%d/%Y %H:%M:%S")})
             else:
-                firebase.put('/users', session['id'], {'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-float(qid[-1]), 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %H:%M:%S")})
+                firebase.put('/users', session['id'], {'sectionsOpen':user['sectionsOpen'], 'username':user['username'], 'password':user['password'], 'email':user['email'], 'phone':user['phone'], 'credit':user['credit']-float(qid[-1]), 'answered':user['answered'] + ' ' + qid, 'times':user['times'] + '; ' + time.strftime("%m/%d/%Y %H:%M:%S")})
         if levelComplete(qid.split('/')[3], qid.split('/')[5]):
             if sectionComplete(qid.split('/')[3]):
                 mailCert(user['username']) 
@@ -152,8 +168,8 @@ def registerPost():
     email = request.form['email']
     phone = request.form['phone']
     if userExists(username):
-        return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':''})
+        return redirect(url_for('login'))
+    result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':'', 'sectionsOpen':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
@@ -167,7 +183,7 @@ def registerGet(username, password):
     password = hashlib.sha1(password).hexdigest()
     if userExists(username):
         return redirect(url_for('index'))
-    result = firebase.post('/users', {'username':username, 'password':password, 'email':'test@test.com', 'phone':'9999999999', 'credit':0, 'answered':'', 'times':''})
+    result = firebase.post('/users', {'username':username, 'password':password, 'email':'test@test.com', 'phone':'9999999999', 'credit':0, 'answered':'', 'times':'', 'sectionsOpen':''})
     session['id'] = result['name']
     return redirect(url_for('index'))
 
