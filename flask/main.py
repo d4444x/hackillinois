@@ -186,7 +186,11 @@ def registerPost():
         return redirect(url_for('login'))
     result = firebase.post('/users', {'username':username, 'password':password, 'email':email, 'phone':phone, 'credit':0, 'answered':'', 'times':'', 'sectionsOpen':''})
     session['id'] = result['name']
-    return redirect(url_for('payments'))
+    return redirect(url_for('welcome'))
+
+@app.route('/welcome/')
+def welcome():
+    return render_template('welcome.jade')
 
 @app.route('/register/')
 def register():
