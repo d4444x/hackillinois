@@ -25,6 +25,13 @@ def getAnswered():
         return redirect(url_for('login'))
     return firebase.get('/users', session['id'])['answered']
 
+@app.route('/stats/')
+def getStats():
+    if not 'id' in  session:
+        return redirect(url_for('login'))
+    return render_template('stats.jade')
+
+
 @app.route('/payments/')
 def payments():
     if not 'id' in  session:
