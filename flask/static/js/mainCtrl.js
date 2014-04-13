@@ -1,17 +1,28 @@
  angular.module('tutsApp', ['ngSanitize'])
   .controller('MainCtrl', function ($scope, $http) {
-    $scope.sections = [];
-    $scope.levels = {};
-    $scope.questions = {};
-    $scope.currentQuestion = 'Question not selected.';
-    $scope.currentTitle = 'Select a Question';
-    $scope.currentQuestionId = '';
-    $scope.answeredQuestions = [];
-    $scope.openSections = [];
-    $scope.currentBalance = 0.0;
-    $scope.stats = {};
-    
-    // Getting questions functionality
+
+    ///////////////////////////////
+    // Controller Wide Variables //
+    ///////////////////////////////
+    $scope.sections = [];                                 // The list sections (topics) that are available
+    $scope.levels = {};                                   // Holds the current levels of difficulty for all question types that have been loaded
+    $scope.questions = {};                                // Holds all loaded questions
+    $scope.currentQuestion = 'Question not selected.';    // The text currently displayed in the question text box
+    $scope.currentTitle = 'Select a Question';            // Title text for the question box
+    $scope.currentQuestionId = '';                        // ID (path) of the current question that the user is answering
+    $scope.answeredQuestions = [];                        // List of all questions that a user has answered
+    $scope.openSections = [];                             // List of the sections that the user has paid for
+    $scope.currentBalance = 0.0;                          // Local copy of the current balance
+    $scope.stats = {};                                    // Stats page storage variable
+
+
+    /////////////////////////////////////
+    // Getting questions functionality //
+    /////////////////////////////////////
+
+    // Get a question given its section, difficulty level, number in the series and a callback
+    // Callback params are err, and res. 
+    // err is non-null if an error occured, and res contains the return data
     $scope.getQuestion = function(sectionName, level, number, callback) {
          $http.get('/ask'+"/"+sectionName+"/"+level+"/"+number).
         success(function(data, status, headers, config) {
@@ -22,6 +33,7 @@
         });
     }
 
+    // Gets all questions listed under a given section and difficulty level
     $scope.getQuestions = function(sectionName, level, callback) {
       $http.get('/ask'+"/"+sectionName+"/"+level).
         success(function(data, status, headers, config) {
@@ -32,6 +44,7 @@
         });
     }
 
+    // Gets the available levels of problems in a given section
     $scope.getLevels = function(sectionName, callback) {
       $http.get('/ask'+"/"+sectionName).
         success(function(data, status, headers, config) {
@@ -185,7 +198,10 @@
 
           tmp.push({ name: value, sort: mapz[value]});
         });
-
+        if (!!!$scope.levels[Object.keys(res)[0]]) {
+        } else {
+          return;
+        }
         $scope.levels[Object.keys(res)[0]] = tmp;
       });
     }
@@ -281,6 +297,9 @@
   })
   .filter('reverse', function() {
     return function(items) {
+      if (!!!items) {
+        return;
+      }
       return items.slice().reverse();
     };
   })

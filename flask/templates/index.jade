@@ -13,17 +13,17 @@
               | Courses
             ul              
               li(ng-repeat="section in sections | inArray:openSections | orderBy:'toString()'", on-finish-render-section)
-                span.glyphicon.glyphicon-plus-sign(ng-click='expandSection(section)')
+                span.sections.glyphicon.glyphicon-plus-sign(ng-click='expandSection(section)')
                   nbsp
                   | {{capitalizeEachWord(section)}}
                 ul
                   li(ng-repeat="level in levels[section] | orderBy:sort | reverse", on-finish-render-level)
-                    span.glyphicon.glyphicon-plus-sign(ng-click='expandLevel(section, level.name)')
+                    span.levels.glyphicon.glyphicon-plus-sign(ng-click='expandLevel(section, level.name)')
                       nbsp
                       | {{capitalizeEachWord(level.name)}}
                     ul
                       li(ng-repeat="question in questions[section][level.name] | orderBy:'toString()'", on-finish-render-question)
-                        span.glyphicon(ng-click='selectQuestion(section, level.name, question)' ng-class="hasAnswered(section,level.name,question)?'question-done glyphicon-ok-sign':'question-not-done glyphicon-question-sign'")
+                        span.questions.glyphicon(ng-click='selectQuestion(section, level.name, question)' ng-class="hasAnswered(section,level.name,question)?'question-done glyphicon-ok-sign':'question-not-done glyphicon-question-sign'")
                           nbsp
                           a(href="")
                             | ${{question}}
