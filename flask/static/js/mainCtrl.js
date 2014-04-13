@@ -122,6 +122,7 @@
           console.log("oh no" + err);
           return;
         }
+        console.log(data);
         $scope.stats = data;
       })
     }
@@ -181,6 +182,8 @@
         $scope.currentQuestion = res.question;
         $scope.currentTitle = res.title;
         $scope.currentQuestionId = '/questions/sections/'+section+'/level/'+level+'/P'+question;
+        angular.element("#currentAnswer").prop('disabled', false);
+        angular.element("#submitAnswer").prop('disabled', false);
       })      
     }
 

@@ -23,8 +23,7 @@ script
         | Please Select a course:
         form(method="post", action="/addSection/")
           select#e1(style='width:100%;', name='section')
-            option(value='math') Math
-            option(value='programming') Programming
+            option(value='{{section}}' ng-repeat="section in sections") {{capitalizeEachWord(section)}}
           br
           h3
             button.btn.btn-primary(type="submit", value="Submit")

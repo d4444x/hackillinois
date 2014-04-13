@@ -7,16 +7,22 @@
   .col-md-3.full-hight
 
   .col-md-6.full-hight
-    .well.well-sm      
-      div(style="-webkit-transform: rotate(-90deg);
-                 position: relative;
-                 left: -260px;
-                 top: -40px;")
-        | Problems Solved
+    .well.well-sm
+      div(ng-repeat="(name, url) in stats | orderBy:name")
+        div(style="text-align: center;")
+          | {{capitalizeEachWord(name)}} Class
+        div(style="-webkit-transform: rotate(-90deg);
+                   position: relative;
+                   left: -260px;
+                   top: -40px;")
+          | Problems Solved
 
-      div(style="text-align:center;")
-        img(ng-src="{{stats['math']}}", width=480)
-        | Amount of time Dax is gone vs time spent at hackathon.
+        div(style="text-align:center;")
+          img(ng-src="{{url}}", width=480)
+        div(style="text-align: center;")
+          | Time
+        br
+        br
       
   .col-md-3.full-height
       

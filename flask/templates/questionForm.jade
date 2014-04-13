@@ -8,8 +8,8 @@ h3 {{currentTitle}}
         .form-group
           label.answer Answer:
           .answer(name='answer')
-            input.form-control(ng-model='currentAnswer', type='text')
-        input.btn.btn-primary(type="submit" id="submit" value="Submit Answer")
+            input#currentAnswer.form-control(ng-model='currentAnswer', type='text',disabled)
+        input#submitAnswer.btn.btn-primary(type="submit",id="submit",value="Submit Answer",disabled)
         nbsp
         img(src="/static/img/loading.gif", id="loading-img", style="display:none")
         span#answer-status.glyphicon(style='display:none;font-size:30px;vertical-align:middle;')
