@@ -1,2 +1,5 @@
 flask
 pyjade
+python-firebase
+twilio
+sendgrid
